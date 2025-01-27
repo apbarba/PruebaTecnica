@@ -21,17 +21,6 @@ public class EmployeeService {
         this.employeeRepository = employeeRepository;
     }
 
-    public Page<Employee> getAllEmployees(Pageable pageable) {
-        Page<Employee> employees = employeeRepository.findAll(pageable);
-        System.out.println("Found employees: " + employees.getContent());
-        return employees;
-    }
-
-    @PostConstruct
-    public void testRepository() {
-        List<Employee> employees = employeeRepository.findAll();
-        System.out.println("Empleados encontrados: " + employees);
-    }
     public List<Employee> getAllEmployees() {
         List<Employee> employees = employeeRepository.findAll();
         employees.forEach(employee -> System.out.println("Empleado recuperado: " + employee));
@@ -51,7 +40,9 @@ public class EmployeeService {
 
         return employeeRepository.save(employee);
     }
-
+    public Employee saveEmployee(Employee employee) {
+        return employeeRepository.save(employee); // Guarda o actualiza el empleado
+    }
     public void deleteEmployee(Long id) {
         employeeRepository.deleteById(id);
     }

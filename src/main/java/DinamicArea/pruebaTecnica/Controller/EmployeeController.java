@@ -10,6 +10,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,24 +41,35 @@ public class EmployeeController {
         return ResponseEntity.ok(employees); // HTTP 200
     }
 
-
-    @GetMapping("/test")
-    public List<Employee> testGetEmployees() {
-        return employeeService.getAllEmployees();
-    }
     @GetMapping("/{id}")
     public Employee getEmployeeById(@PathVariable Long id) {
         return employeeService.getEmployeeById(id);
     }
 
     @PostMapping
-    public Employee createEmployee(@RequestBody Employee employee) {
-        return employeeService.createEmployee(employee);
+    public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
+        System.out.println("POST /api/employees recibido con datos: " + employee);
+        Employee savedEmployee = employeeService.createEmployee(employee);
+        return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
     }
-
     @PutMapping("/{id}")
-    public Employee updateEmployee(@PathVariable Long id, @RequestBody Employee updatedEmployee) {
-        return employeeService.updateEmployee(id);
+    public ResponseEntity<Employee> updateEmployee(@PathVariable Long id, @RequestBody Employee employee) {
+        Employee existingEmployee = employeeService.getEmployeeById(id);
+
+        if (existingEmployee == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        existingEmployee.setFirstName(employee.getFirstName());
+        existingEmployee.setLastName(employee.getLastName());
+        existingEmployee.setBirthDate(employee.getBirthDate());
+        existingEmployee.setGender(employee.getGender());
+        existingEmployee.setHireDate(employee.getHireDate());
+
+        // Guardar el empleado actualizado
+        Employee updatedEmployee = employeeService.saveEmployee(existingEmployee);
+
+        // Retornar el empleado actualizado con el código 200 OK
+        return new ResponseEntity<>(updatedEmployee, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
