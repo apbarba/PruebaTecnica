@@ -35,11 +35,6 @@ public class EmployeeService {
         return employeeRepository.save(employee);
     }
 
-    public Employee updateEmployee(Long id) {
-        Employee employee = getEmployeeById(id);
-
-        return employeeRepository.save(employee);
-    }
     public Employee saveEmployee(Employee employee) {
         return employeeRepository.save(employee); // Guarda o actualiza el empleado
     }

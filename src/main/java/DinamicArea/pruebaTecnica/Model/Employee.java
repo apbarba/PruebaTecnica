@@ -19,12 +19,12 @@ import java.time.LocalDate;
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty("empNo")  // Obligamos a Jackson a procesar este campo
+    @JsonProperty("empNo")
     private Long empNo;
 
     @Column(name = "birth_date")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @JsonProperty("birthDate") // Nombre personalizado en JSON
+    @JsonProperty("birthDate")
     private LocalDate birthDate;
 
     @Column(name = "first_name")

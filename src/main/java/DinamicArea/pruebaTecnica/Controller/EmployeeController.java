@@ -24,17 +24,14 @@ public class EmployeeController {
 
     @Autowired
     private final EmployeeService employeeService;
-    private final PagedResourcesAssembler<Employee> pagedResourcesAssembler;
-
 
     public EmployeeController(EmployeeService employeeService, PagedResourcesAssembler<Employee> pagedResourcesAssembler) {
         this.employeeService = employeeService;
-        this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
     @GetMapping
     public ResponseEntity<List<Employee>> getAllEmployees() {
         List<Employee> employees = employeeService.getAllEmployees();
-        System.out.println("Datos enviados al cliente: " + employees); // Verifica aquí
+        System.out.println("Datos enviados al cliente: " + employees);
         if (employees.isEmpty()) {
             return ResponseEntity.noContent().build(); // HTTP 204
         }
