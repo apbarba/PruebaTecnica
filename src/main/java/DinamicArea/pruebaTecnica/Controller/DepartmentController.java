@@ -3,6 +3,7 @@ package DinamicArea.pruebaTecnica.Controller;
 import DinamicArea.pruebaTecnica.Model.Department;
 import DinamicArea.pruebaTecnica.Model.Employee;
 import DinamicArea.pruebaTecnica.Service.DepartmentService;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
@@ -16,9 +17,16 @@ public class DepartmentController {
         this.departmentService = departmentService;
     }
 
-    @GetMapping
+   /* @GetMapping
     public List<Department> getAllDepartments() {
         List<Department> departments = departmentService.getAllDepartments();
+        System.out.println("Departments found: " + departments);
+        return departments;
+    } */
+
+    @GetMapping
+    public Page<Department> getAllDepartments(@RequestParam int page, @RequestParam int size) {
+        Page<Department> departments = departmentService.getAllDepartmentsWithPagination(page, size);
         System.out.println("Departments found: " + departments);
         return departments;
     }

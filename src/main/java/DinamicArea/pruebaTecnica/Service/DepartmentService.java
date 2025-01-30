@@ -4,6 +4,8 @@ import DinamicArea.pruebaTecnica.Model.Department;
 import DinamicArea.pruebaTecnica.Model.Employee;
 import DinamicArea.pruebaTecnica.Repository.DepartmentRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -16,8 +18,13 @@ public class DepartmentService {
         this.departmentRepository = departmentRepository;
     }
 
-    public List<Department> getAllDepartments() {
+   /* public List<Department> getAllDepartments() {
         return departmentRepository.findAll();
+    } */
+
+    public Page<Department> getAllDepartmentsWithPagination(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return departmentRepository.findAll(pageRequest);
     }
 
     public Department getDepartmenteeById(Long id) {
