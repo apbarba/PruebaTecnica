@@ -8,6 +8,9 @@ import DinamicArea.pruebaTecnica.Service.EmployeeService;
 import DinamicArea.pruebaTecnica.Service.TitleService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,14 +33,18 @@ public class TitleController {
         this.employeeService = employeeService;
     }
 
-
     @GetMapping
-    public List<Title> getAllTitle() {
-        List<Title> departments = titleService.getAllTitles();
-        System.out.println("Title found: " + departments);
-        return departments;
-    }
+    public Page<Title> getTitles(
+            @RequestParam(value = "titleFilter", required = false) String titleFilter,
+            @RequestParam(value = "empNoFilter", required = false) String empNoFilter,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
 
+        Pageable pageable = PageRequest.of(page, size);
+
+        // Llamamos al servicio para obtener los títulos filtrados y paginados
+        return titleService.getTitlesWithFiltersAndPagination(titleFilter, empNoFilter, pageable);
+    }
     @GetMapping("{id}")
     public ResponseEntity<List<Title>> getTitlesById(@PathVariable Long id) {
         List<Title> titles = titleService.getTitlesByEmpNo(id);

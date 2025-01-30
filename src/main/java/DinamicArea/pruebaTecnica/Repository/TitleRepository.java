@@ -12,10 +12,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface TitleRepository extends JpaRepository<Title, TitleId> {
+public interface TitleRepository extends JpaRepository<Title, TitleId>, JpaSpecificationExecutor<Title> {
 
-    @Query("SELECT t FROM Title t JOIN FETCH t.employee")
-    List<Title> findAllWithEmployees();
 
     List<Title> findByIdEmpNo(Long empNo);
 

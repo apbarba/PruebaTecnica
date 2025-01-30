@@ -6,8 +6,13 @@ import DinamicArea.pruebaTecnica.Model.Title;
 import DinamicArea.pruebaTecnica.Model.TitleId;
 import DinamicArea.pruebaTecnica.Repository.EmployeeRepository;
 import DinamicArea.pruebaTecnica.Repository.TitleRepository;
+import DinamicArea.pruebaTecnica.Specifications.TitleSpecification;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,7 +36,7 @@ public class TitleService {
 
 
     // Obtener todos los títulos
-    public List<Title> getAllTitles() {
+  /*  public List<Title> getAllTitles() {
         List<Title> titles = titleRepository.findAll();
         titles.forEach(title -> {
             if (title.getEmployee() == null) {
@@ -39,7 +44,23 @@ public class TitleService {
             }
         });
         return titles;
+    } */
+
+    public Page<Title> getTitlesWithFiltersAndPagination(String titleFilter, String empNoFilter, Pageable pageable) {
+        Specification<Title> spec = (root, query, criteriaBuilder) -> {
+            if (titleFilter != null && !titleFilter.isEmpty()) {
+                query.where(criteriaBuilder.like(root.get("id").get("title"), "%" + titleFilter + "%"));
+            }
+            if (empNoFilter != null && !empNoFilter.isEmpty()) {
+                query.where(criteriaBuilder.equal(root.get("id").get("empNo"), Long.parseLong(empNoFilter)));
+            }
+            return query.getRestriction();
+        };
+
+        // Se pasa el Specification y Pageable
+        return titleRepository.findAll(spec, pageable);
     }
+
 
     public List<Title> getTitlesByEmpNo(Long empNo) {
         return titleRepository.findByIdEmpNo(empNo);
