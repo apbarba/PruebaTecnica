@@ -8,9 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static DinamicArea.pruebaTecnica.Specifications.EmployeeSpecifications.hasFirstName;
 
 @Service
 public class EmployeeService {
@@ -31,6 +34,12 @@ public class EmployeeService {
     public Page<Employee> getAllEmployees(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         return employeeRepository.findAll(pageRequest);
+    }
+
+    public Page<Employee> getFilteredEmployees(String firstName, int page, int size) {
+        Specification<Employee> specification = hasFirstName(firstName);
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return employeeRepository.findAll(specification, pageRequest);
     }
     public Employee getEmployeeById(Long id) {
         return employeeRepository.findById(id)

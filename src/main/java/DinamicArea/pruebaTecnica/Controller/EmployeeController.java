@@ -38,9 +38,16 @@ public class EmployeeController {
         return ResponseEntity.ok(employees); // HTTP 200
     }*/
 
+    //Metodo solo con la paginacion
     @GetMapping
     public Page<Employee> getAllEmployees(@RequestParam int page, @RequestParam int size) {
         return employeeService.getAllEmployees(page, size);
+    }
+
+    //metodo con la paginacion y el filtro, que buscamos por el primer nombre
+    @GetMapping("/filter")
+    public Page<Employee> getFilteredEmployees(@RequestParam String firstName, @RequestParam int page, @RequestParam int size) {
+        return employeeService.getFilteredEmployees(firstName, page, size);
     }
 
     @GetMapping("/{id}")
