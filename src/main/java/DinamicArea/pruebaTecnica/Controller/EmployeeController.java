@@ -28,7 +28,7 @@ public class EmployeeController {
     public EmployeeController(EmployeeService employeeService, PagedResourcesAssembler<Employee> pagedResourcesAssembler) {
         this.employeeService = employeeService;
     }
-    @GetMapping
+   /* @GetMapping
     public ResponseEntity<List<Employee>> getAllEmployees() {
         List<Employee> employees = employeeService.getAllEmployees();
         System.out.println("Datos enviados al cliente: " + employees);
@@ -36,6 +36,11 @@ public class EmployeeController {
             return ResponseEntity.noContent().build(); // HTTP 204
         }
         return ResponseEntity.ok(employees); // HTTP 200
+    }*/
+
+    @GetMapping
+    public Page<Employee> getAllEmployees(@RequestParam int page, @RequestParam int size) {
+        return employeeService.getAllEmployees(page, size);
     }
 
     @GetMapping("/{id}")

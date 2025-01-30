@@ -6,6 +6,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -21,10 +22,15 @@ public class EmployeeService {
         this.employeeRepository = employeeRepository;
     }
 
-    public List<Employee> getAllEmployees() {
+  /*  public List<Employee> getAllEmployees() {
         List<Employee> employees = employeeRepository.findAll();
         employees.forEach(employee -> System.out.println("Empleado recuperado: " + employee));
         return employees;
+    } */
+
+    public Page<Employee> getAllEmployees(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return employeeRepository.findAll(pageRequest);
     }
     public Employee getEmployeeById(Long id) {
         return employeeRepository.findById(id)
