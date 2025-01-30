@@ -6,6 +6,9 @@ import DinamicArea.pruebaTecnica.Model.SalaryId;
 import DinamicArea.pruebaTecnica.Repository.EmployeeRepository;
 import DinamicArea.pruebaTecnica.Repository.SalaryRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,13 +27,17 @@ public class SalaryService {
         this.employeeRepository = employeeRepository;
     }
 
-    public List<Salary> getAllSalary() {
+   /* public List<Salary> getAllSalary() {
         List<Salary> salaries = salaryRepository.findAll();
         salaries.forEach(salary -> {
             // Esto debería no fallar si el getter getEmployee() está presente
             System.out.println("Empleado recuperado: " + salary.getEmployee());
         });
         return salaries;
+    } */
+
+    public Page<Salary> getAllSalaries(Specification<Salary> spec, Pageable pageable) {
+        return salaryRepository.findAll(spec, pageable);
     }
     public List<Salary> getSalariesByEmpNo(Long empNo) {
         return salaryRepository.findByIdEmpNo(empNo);
@@ -43,21 +50,17 @@ public class SalaryService {
     public Salary updateSalary(Long empNo, LocalDate fromDate, Salary updatedSalary) {
         SalaryId salaryId = new SalaryId(empNo, fromDate);
 
-        // Buscar el salario existente
         Optional<Salary> existingSalaryOpt = salaryRepository.findById(salaryId);
 
         if (existingSalaryOpt.isPresent()) {
             Salary existingSalary = existingSalaryOpt.get();
 
-            // Actualizar solo los campos permitidos
             existingSalary.setSalary(updatedSalary.getSalary());
 
-            // Actualizar el empleado si es necesario
             if (updatedSalary.getEmployee() != null) {
                 existingSalary.setEmployee(updatedSalary.getEmployee());
             }
 
-            // Guardar los cambios
             return salaryRepository.save(existingSalary);
         } else {
             throw new EntityNotFoundException("Salary not found for empNo: " + empNo + " and fromDate: " + fromDate);

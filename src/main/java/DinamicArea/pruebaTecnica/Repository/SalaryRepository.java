@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface SalaryRepository extends JpaRepository<Salary, SalaryId> {
+public interface SalaryRepository extends JpaRepository<Salary, SalaryId>, JpaSpecificationExecutor<Salary> {
 
     List<Salary> findByIdEmpNo(Long empNo);
 
