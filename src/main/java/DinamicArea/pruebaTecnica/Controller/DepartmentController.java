@@ -25,8 +25,12 @@ public class DepartmentController {
     } */
 
     @GetMapping
-    public Page<Department> getAllDepartments(@RequestParam int page, @RequestParam int size) {
-        Page<Department> departments = departmentService.getAllDepartmentsWithPagination(page, size);
+    public Page<Department> getAllDepartments(
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam(required = false) String deptName // deptName es opcional
+    ) {
+        Page<Department> departments = departmentService.getAllDepartmentsWithPaginationAndFilter(page, size, deptName);
         System.out.println("Departments found: " + departments);
         return departments;
     }

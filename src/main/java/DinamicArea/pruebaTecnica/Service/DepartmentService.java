@@ -3,9 +3,11 @@ package DinamicArea.pruebaTecnica.Service;
 import DinamicArea.pruebaTecnica.Model.Department;
 import DinamicArea.pruebaTecnica.Model.Employee;
 import DinamicArea.pruebaTecnica.Repository.DepartmentRepository;
+import DinamicArea.pruebaTecnica.Specifications.DepartmentSpecifications;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -22,9 +24,10 @@ public class DepartmentService {
         return departmentRepository.findAll();
     } */
 
-    public Page<Department> getAllDepartmentsWithPagination(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        return departmentRepository.findAll(pageRequest);
+    public Page<Department> getAllDepartmentsWithPaginationAndFilter(int page, int size, String deptName) {
+        PageRequest pageRequest = PageRequest.of(page, size);  // Crea el PageRequest
+        Specification<Department> spec = DepartmentSpecifications.hasDeptName(deptName); // Aplica la especificación
+        return departmentRepository.findAll(spec, pageRequest);  // Pasa la especificación y el PageRequest
     }
 
     public Department getDepartmenteeById(Long id) {
